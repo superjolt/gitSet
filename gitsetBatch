@@ -1,0 +1,38 @@
+@echo off
+REM Usage: gitset.bat <repo-url> [ide]
+
+IF "%~1"=="" (
+    echo Usage: %~nx0 ^<repo-url^> ^<ide^>
+    exit /b 1
+)
+
+git clone "%~1"
+IF ERRORLEVEL 1 exit /b %ERRORLEVEL%
+
+SET "REPO=%~n1"
+
+IF "%~2"=="" (
+    code "%REPO%"
+    exit /b
+) ELSE IF /I "%~2"=="vim" (
+    IF EXIST "%REPO%" (
+        pushd "%REPO%"
+        vim .
+        popd
+    )
+    exit /b
+) ELSE IF /I "%~2"=="nvim" (
+    IF EXIST "%REPO%" (
+        pushd "%REPO%"
+        nvim .
+        popd
+    )
+    exit /b
+) ELSE (
+    echo Usage: %~nx0 ^<repo-url^> ^<ide^>
+    echo List of IDE's currently available:
+    echo VSCode, Vim, Neovim
+    echo If you want vim or neovim, then do %~nx0 ^<repo-url^> vim and %~nx0 ^<repo-url^> nvim
+    echo If you want VSCode don't put anything
+    exit /b 1
+)
